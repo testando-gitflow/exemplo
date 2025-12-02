@@ -1,0 +1,48 @@
+name: Release Please
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags || git fetch --tags
+
+      - uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: simple
+
+      # Identifica etapas alpha/beta
+      - name: Rename prerelease tag
+        shell: bash
+        run: |
+          BRANCH="${{ github.event.pull_request.base.ref }}"
+          VERSION=$(git describe --tags --abbrev=0)
+          if [ "$BRANCH" = "dev" ]; then
+            NEW="${VERSION}-alpha"
+          elif [ "$BRANCH" = "main" ]; then
+            NEW="${VERSION}-beta"
+          else
+            echo "Branch não suportada: $BRANCH"; exit 0
+          fi
+          if git rev-parse "$NEW" >/dev/null 2>&1; then
+            echo "Tag $NEW já existe. Pulando criação."
+          else
+            git tag "$NEW"
+            git push origin "$NEW"
+          fi

@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": "1",
+      "title": "Criar branch feature",
+      "completed": false,
+      "createdAt": "2024-01-01T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Fazer commit das alterações",
+      "completed": true,
+      "createdAt": "2024-01-01T11:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "Abrir Pull Request",
+      "completed": false,
+      "createdAt": "2024-01-01T12:00:00.000Z"
+    }
+  ]
+}

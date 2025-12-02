@@ -1,0 +1,8 @@
+# Code owners globais
+
+- @dev-senior @qa-team-lead
+
+# Responsáveis específicos por áreas do repo
+
+/frontend/_ @frontend-team
+/backend/_ @backend-team
