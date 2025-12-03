@@ -23,6 +23,7 @@ jobs:
         run: git fetch --prune --unshallow --tags || git fetch --tags
 
       - uses: googleapis/release-please-action@v4
+        id: release_please
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
@@ -31,8 +32,23 @@ jobs:
       - name: Rename prerelease tag
         shell: bash
         run: |
+          set -euo pipefail
           BRANCH="${{ github.event.pull_request.base.ref }}"
-          VERSION=$(git describe --tags --abbrev=0)
+          # Prefer the tag produced by release-please if any
+          RP_TAG="${{ steps.release_please.outputs.tag_name }}"
+          VERSION=""
+          if [ -n "$RP_TAG" ]; then
+            VERSION="$RP_TAG"
+          else
+            # Fallback to latest tag if it exists; avoid failing when there are no tags
+            VERSION=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "Nenhuma tag encontrada e release-please não criou tag. Pulando etapa de pré-release."
+            exit 0
+          fi
+
           if [ "$BRANCH" = "dev" ]; then
             NEW="${VERSION}-alpha"
           elif [ "$BRANCH" = "main" ]; then
@@ -40,9 +56,11 @@ jobs:
           else
             echo "Branch não suportada: $BRANCH"; exit 0
           fi
+
           if git rev-parse "$NEW" >/dev/null 2>&1; then
             echo "Tag $NEW já existe. Pulando criação."
           else
+            echo "Criando tag pré-release: $NEW"
             git tag "$NEW"
             git push origin "$NEW"
           fi
