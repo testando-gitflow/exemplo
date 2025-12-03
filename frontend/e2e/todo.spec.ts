@@ -1,12 +1,32 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("TODO App", () => {
+  test.describe.configure({ mode: "serial" });
+
+  // Clear all todos from the API before the test suite runs
+  test.beforeAll(async ({ request }) => {
+    const res = await request.get("http://localhost:3001/todos");
+    if (res.ok()) {
+      const todos: Array<{ id: string | number }> = await res.json();
+      for (const t of todos) {
+        await request.delete(`http://localhost:3001/todos/${t.id}`);
+      }
+    }
+  });
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
 
   test("should display the header", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "TODO App" })).toBeVisible();
+  });
+
+  test("should display the subheader", async ({ page }) => {
+    await expect(
+      page.getByText(
+        "Gerencie suas tarefas diárias e organize-as por categoria."
+      )
+    ).toBeVisible();
   });
 
   test("should display gitflow information", async ({ page }) => {
@@ -28,7 +48,12 @@ test.describe("TODO App", () => {
     await todoInput.fill("Nova tarefa de teste");
     await addButton.click();
 
-    await expect(page.getByText("Nova tarefa de teste")).toBeVisible();
+    // Scope to the most recently added matching item to avoid strict-mode issues
+    const newTodo = page
+      .locator('[data-testid^="todo-item-"]')
+      .filter({ hasText: "Nova tarefa de teste" })
+      .last();
+    await expect(newTodo).toBeVisible();
   });
 
   test("should toggle todo completion", async ({ page }) => {
@@ -39,13 +64,15 @@ test.describe("TODO App", () => {
     await todoInput.fill("Tarefa para completar");
     await addButton.click();
 
-    // Wait for the todo to appear
-    await expect(page.getByText("Tarefa para completar")).toBeVisible();
+    // Wait for the most recently added matching todo to appear
+    const targetTodo = page
+      .locator('[data-testid^="todo-item-"]')
+      .filter({ hasText: "Tarefa para completar" })
+      .last();
+    await expect(targetTodo).toBeVisible();
 
     // Find and click the checkbox for this todo
-    const todoItem = page
-      .locator('[data-testid^="todo-item-"]')
-      .filter({ hasText: "Tarefa para completar" });
+    const todoItem = targetTodo;
     const checkbox = todoItem.locator('[data-testid^="todo-checkbox-"]');
 
     await checkbox.click();
@@ -85,10 +112,15 @@ test.describe("TODO App", () => {
   });
 
   test("should display todo count", async ({ page }) => {
-    // Wait for initial todos to load
-    await page.waitForSelector('[data-testid="todo-list"]');
+    // Ensure at least one item exists to display the count
+    const todoInput = page.getByTestId("todo-input");
+    const addButton = page.getByTestId("add-todo-button");
 
-    // Check if count is displayed
+    await todoInput.fill("Item para contagem");
+    await addButton.click();
+
+    // Wait for list and verify count text appears
+    await page.waitForSelector('[data-testid="todo-list"]');
     await expect(page.getByText(/de \d+ tarefas concluídas/)).toBeVisible();
   });
 });
