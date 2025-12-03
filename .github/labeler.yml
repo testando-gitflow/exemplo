@@ -1,0 +1,30 @@
+# Automatically add labels based on changed file paths
+# Make sure you also add the labels in the repo (settings -> labels) or auto-create them.
+
+frontend:
+  - "frontend/**"
+
+backend:
+  - "backend/**"
+
+docs:
+  - "docs/**"
+  - "*.md"
+  - ".github/**"
+
+release:
+  - "release/**"
+  - "docs/release/**"
+
+team-dev-seniors:
+  - "infra/**"
+
+# TODO: Levantar os critérios de bug vs melhoria vs feature
+type-bug:
+  - "backend/**/migrations/**"
+  - "frontend/**/__tests__/**"
+  - "**/*.spec.*"
+
+type-ci:
+  - ".github/workflows/**"
+  - "ci/**"

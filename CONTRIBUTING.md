@@ -12,7 +12,7 @@ Este documento define as regras de contribuição e fluxo de desenvolvimento par
 ## Branches de trabalho
 
 - `feat/<nome-da-feature>`
-- `bugfix/<nome-do-fix>`
+- `fix/<nome-do-fix>`
 - `hotfix/<nome-do-hotfix>`
 
 ### Regras globais
@@ -22,23 +22,24 @@ Este documento define as regras de contribuição e fluxo de desenvolvimento par
 3. **Squash merge obrigatório**.
 4. **Testes e validações automáticas devem passar** antes do merge.
 5. **Commits devem seguir Conventional Commits**.
+6. **Após aplicar hotfix** na `main`, abrir um PR de `main` -> `dev`.
 
 ## Fluxo de desenvolvimento
 
 | Origem     | Destino | Ambiente | Tipo de versionamento |
 | ---------- | ------- | -------- | --------------------- |
 | feat/\*    | dev     | Alpha    | minor                 |
-| bugfix/\*  | dev     | Alpha    | patch                 |
+| fix/\*     | dev     | Alpha    | patch                 |
 | release/\* | main    | Beta     | conforme release      |
 | hotfix/\*  | main    | Produção | patch                 |
 
 ## Aprovação de Pull Requests
 
-| Tipo           | Aprovadores necessários    |
-| -------------- | -------------------------- |
-| Feature/Bugfix | 1 revisor técnico          |
-| Release        | 2 revisores (Tech + QA/PM) |
-| Hotfix         | 1 revisor sênior           |
+| Tipo        | Aprovadores necessários    |
+| ----------- | -------------------------- |
+| Feature/Fix | 1 revisor técnico          |
+| Release     | 2 revisores (Tech + QA/PM) |
+| Hotfix      | 1 revisor sênior           |
 
 ## Versionamento
 

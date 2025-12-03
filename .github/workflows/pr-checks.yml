@@ -1,0 +1,67 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  # 1. Validate commit messages
+  # commitlint:
+  #   name: Commit Message Lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Install Node (for commitlint)
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+
+  #     - name: Run commitlint on PR commits
+  #       uses: amannn/action-commitlint@v2
+  #       with:
+  #         configFile: |
+  #           {
+  #             "extends": ["@commitlint/config-conventional"]
+  #           }
+
+  # 2. Ensure PR links an issue
+  # require-linked-issue:
+  #   name: Require Linked Issue
+  #   runs-on: ubuntu-latest
+  #   needs: commitlint
+  #   steps:
+  #     - name: Check PR body for linked issue (Closes #)
+  #       uses: actions/github-script@v6
+  #       with:
+  #         script: |
+  #           const body = context.payload.pull_request.body || "";
+  #           const hasLinked = /(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved) #[0-9]+/i.test(body);
+  #           if (!hasLinked) {
+  #             core.setFailed("PR must link an issue using 'Closes #<issue-number>' or equivalent.");
+  #           }
+
+  # 3. Enforce branch source policy for main
+  enforce-branch-source:
+    name: Enforce Branch Source Policy for main
+    runs-on: ubuntu-latest
+    # needs: require-linked-issue
+    if: ${{ always() }}
+    steps:
+      - name: Validate source branch for PR to main
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const base = context.payload.pull_request.base.ref;
+            const head = context.payload.pull_request.head.ref;
+            // only enforce when target is main
+            if (base !== 'main') {
+              return
+            }
+            const ok = head.startsWith('release/') || head.startsWith('hotfix/');
+            if (!ok) {
+              core.setFailed(`PR targets 'main' but source branch is '${head}'. Only 'release/*' or 'hotfix/*' PRs are allowed to merge into 'main'.`);
+            }
