@@ -61,28 +61,28 @@ Durante a etapa de configuração do repositório, é recomendado criar os segui
 
 ### Criando times via GitHub CLI
 
-Execute os comandos abaixo, substituindo `ORG` pelo nome da sua organização:
+Execute os comandos abaixo, substituindo `ORG` pelo nome da sua organização. Para que os times sejam visíveis em toda a organização e utilizáveis em múltiplos repositórios, defina `privacy='closed'` (times secretos não são listados nem aplicáveis em CODEOWNERS de forma ampla):
 
 ```sh
-gh api orgs/ORG/teams -f name='dev-frontend'
-gh api orgs/ORG/teams -f name='dev-backend'
-gh api orgs/ORG/teams -f name='dev-seniors'
+gh api orgs/ORG/teams -f name='dev-frontend' -f privacy='closed'
+gh api orgs/ORG/teams -f name='dev-backend' -f privacy='closed'
+gh api orgs/ORG/teams -f name='dev-seniors' -f privacy='closed'
 ```
 
 ### Criando times via GitHub API (curl)
 
-Substitua `ORG` pelo nome da sua organização e `TOKEN` por um token de acesso com permissão de admin:
+Substitua `ORG` pelo nome da sua organização e `TOKEN` por um token de acesso com permissão de admin. Use `"privacy": "closed"` para times visíveis na organização:
 
 ```sh
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-frontend"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-frontend", "privacy": "closed"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-backend"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-backend", "privacy": "closed"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-seniors"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-seniors", "privacy": "closed"}'
 ```
 
 ## Labels sugeridas
@@ -96,11 +96,10 @@ As labels abaixo são aplicadas automaticamente conforme o arquivo `.github/labe
 ```plaintext
 frontend
 backend
+infra
 docs
+ci
 release
-team-dev-seniors
-type-bug
-type-ci
 ```
 
 ### Criando labels via GitHub CLI
@@ -110,11 +109,10 @@ Execute os comandos abaixo, substituindo `OWNER/REPO` pelo repositório desejado
 ```sh
 gh label create "frontend" --color "1D76DB" --description "Mudanças no frontend" --repo OWNER/REPO
 gh label create "backend" --color "D73A4A" --description "Mudanças no backend" --repo OWNER/REPO
+gh label create "infra" --color "5319E7" --description "Infraestrutura" --repo OWNER/REPO
 gh label create "docs" --color "0075CA" --description "Documentação" --repo OWNER/REPO
+gh label create "ci" --color "A2EEEF" --description "Integração contínua" --repo OWNER/REPO
 gh label create "release" --color "FBCA04" --description "Release" --repo OWNER/REPO
-gh label create "team-dev-seniors" --color "F9D0C4" --description "Time Seniors/Infraestrutura" --repo OWNER/REPO
-gh label create "type-bug" --color "B60205" --description "Bug detectado" --repo OWNER/REPO
-gh label create "type-ci" --color "A2EEEF" --description "Mudanças de CI" --repo OWNER/REPO
 ```
 
 ### Criando labels via GitHub API (curl)
@@ -130,19 +128,16 @@ curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github
   -d '{"name": "backend", "color": "D73A4A", "description": "Mudanças no backend"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/OWNER/REPO/labels \
+  -d '{"name": "infra", "color": "5319E7", "description": "Infraestrutura"}'
+curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/OWNER/REPO/labels \
   -d '{"name": "docs", "color": "0075CA", "description": "Documentação"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/OWNER/REPO/labels \
+  -d '{"name": "ci", "color": "A2EEEF", "description": "Integração contínua"}'
+curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/OWNER/REPO/labels \
   -d '{"name": "release", "color": "FBCA04", "description": "Release"}'
-curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/OWNER/REPO/labels \
-  -d '{"name": "team-dev-seniors", "color": "F9D0C4", "description": "Time Seniors/Infraestrutura"}'
-curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/OWNER/REPO/labels \
-  -d '{"name": "type-bug", "color": "B60205", "description": "Bug detectado"}'
-curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-  https://api.github.com/repos/OWNER/REPO/labels \
-  -d '{"name": "type-ci", "color": "A2EEEF", "description": "Mudanças de CI"}'
 ```
 
 ## CODEOWNERS
@@ -160,10 +155,10 @@ O arquivo `.github/CODEOWNERS` define quem é automaticamente marcado como respo
 2. Garanta que os times existam na organização (veja a seção "Times sugeridos").
 3. Ajuste as regras conforme sua estrutura de pastas.
 
-Exemplo de conteúdo:
+Exemplo de conteúdo (substitua `ORG` pelo nome da sua organização):
 
 ```plaintext
-# Code owners globais (substitua ORG pelo nome da sua organização)
+# Code owners globais
 * @ORG/dev-frontend @ORG/dev-backend @ORG/dev-seniors
 
 # Responsáveis específicos por áreas do repo

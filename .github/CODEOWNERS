@@ -1,4 +1,4 @@
-# Code owners globais (substitua ORG pelo nome da sua organização)
+# Code owners globais (substitua ORG pelo nome da sua organização, aqui: testando-gitflow)
 
 - @testando-gitflow/dev-frontend @testando-gitflow/dev-backend @testando-gitflow/dev-seniors
 

@@ -7,24 +7,17 @@ frontend:
 backend:
   - "backend/**"
 
+infra:
+  - "infra/**"
+
 docs:
   - "docs/**"
   - "*.md"
   - ".github/**"
 
-release:
-  - "release/**"
-  - "docs/release/**"
-
-team-dev-seniors:
-  - "infra/**"
-
-# TODO: Levantar os critérios de bug vs melhoria vs feature
-type-bug:
-  - "backend/**/migrations/**"
-  - "frontend/**/__tests__/**"
-  - "**/*.spec.*"
-
-type-ci:
+ci:
   - ".github/workflows/**"
   - "ci/**"
+
+release:
+  - "CHANGELOG.md"
