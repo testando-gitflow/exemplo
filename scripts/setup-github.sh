@@ -48,10 +48,10 @@ else
 fi
 
 echo "Creating organization teams in ${ORG}..."
-# Teams creation
-gh api "orgs/${ORG}/teams" -f name='dev-frontend' || true
-gh api "orgs/${ORG}/teams" -f name='dev-backend' || true
-gh api "orgs/${ORG}/teams" -f name='dev-seniors' || true
+# Teams creation (visible across the org): use privacy=closed instead of secret
+gh api "orgs/${ORG}/teams" -f name='dev-frontend' -f privacy='closed' || true
+gh api "orgs/${ORG}/teams" -f name='dev-backend' -f privacy='closed' || true
+gh api "orgs/${ORG}/teams" -f name='dev-seniors' -f privacy='closed' || true
 
 echo "Creating repository labels in ${REPO_SLUG}..."
 # Labels creation

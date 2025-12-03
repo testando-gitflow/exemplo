@@ -12,8 +12,9 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Cria release apenas quando o merge é na main (alinhado ao GitFlow)
   release-please:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -22,45 +23,40 @@ jobs:
       - name: Fetch all tags
         run: git fetch --prune --unshallow --tags || git fetch --tags
 
-      - uses: googleapis/release-please-action@v4
+      - name: Run Release Please
+        uses: googleapis/release-please-action@v4
         id: release_please
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
 
-      # Identifica etapas alpha/beta
-      - name: Rename prerelease tag
+  # Em merges na dev, publica apenas tag de pré-release (alpha) sem criar Release
+  prerelease-alpha:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags || git fetch --tags
+
+      - name: Create alpha prerelease tag
         shell: bash
         run: |
           set -euo pipefail
-          BRANCH="${{ github.event.pull_request.base.ref }}"
-          # Prefer the tag produced by release-please if any
-          RP_TAG="${{ steps.release_please.outputs.tag_name }}"
-          VERSION=""
-          if [ -n "$RP_TAG" ]; then
-            VERSION="$RP_TAG"
-          else
-            # Fallback to latest tag if it exists; avoid failing when there are no tags
-            VERSION=$(git describe --tags --abbrev=0 2>/dev/null || true)
-          fi
-
-          if [ -z "$VERSION" ]; then
-            echo "Nenhuma tag encontrada e release-please não criou tag. Pulando etapa de pré-release."
+          # Usa a última tag existente como base; se não houver, aborta silenciosamente
+          BASE_TAG=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -z "$BASE_TAG" ]; then
+            echo "Nenhuma tag base encontrada. Pulando criação de alpha."
             exit 0
           fi
 
-          if [ "$BRANCH" = "dev" ]; then
-            NEW="${VERSION}-alpha"
-          elif [ "$BRANCH" = "main" ]; then
-            NEW="${VERSION}-beta"
+          NEW_TAG="${BASE_TAG}-alpha"
+          if git rev-parse "$NEW_TAG" >/dev/null 2>&1; then
+            echo "Tag $NEW_TAG já existe. Pulando criação."
           else
-            echo "Branch não suportada: $BRANCH"; exit 0
-          fi
-
-          if git rev-parse "$NEW" >/dev/null 2>&1; then
-            echo "Tag $NEW já existe. Pulando criação."
-          else
-            echo "Criando tag pré-release: $NEW"
-            git tag "$NEW"
-            git push origin "$NEW"
+            echo "Criando tag pré-release: $NEW_TAG"
+            git tag "$NEW_TAG"
+            git push origin "$NEW_TAG"
           fi

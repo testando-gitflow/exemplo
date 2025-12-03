@@ -61,28 +61,28 @@ Durante a etapa de configuração do repositório, é recomendado criar os segui
 
 ### Criando times via GitHub CLI
 
-Execute os comandos abaixo, substituindo `ORG` pelo nome da sua organização:
+Execute os comandos abaixo, substituindo `ORG` pelo nome da sua organização. Para que os times sejam visíveis em toda a organização e utilizáveis em múltiplos repositórios, defina `privacy='closed'` (times secretos não são listados nem aplicáveis em CODEOWNERS de forma ampla):
 
 ```sh
-gh api orgs/ORG/teams -f name='dev-frontend'
-gh api orgs/ORG/teams -f name='dev-backend'
-gh api orgs/ORG/teams -f name='dev-seniors'
+gh api orgs/ORG/teams -f name='dev-frontend' -f privacy='closed'
+gh api orgs/ORG/teams -f name='dev-backend' -f privacy='closed'
+gh api orgs/ORG/teams -f name='dev-seniors' -f privacy='closed'
 ```
 
 ### Criando times via GitHub API (curl)
 
-Substitua `ORG` pelo nome da sua organização e `TOKEN` por um token de acesso com permissão de admin:
+Substitua `ORG` pelo nome da sua organização e `TOKEN` por um token de acesso com permissão de admin. Use `"privacy": "closed"` para times visíveis na organização:
 
 ```sh
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-frontend"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-frontend", "privacy": "closed"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-backend"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-backend", "privacy": "closed"}'
 curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github+json" \
-	https://api.github.com/orgs/ORG/teams \
-	-d '{"name": "dev-seniors"}'
+  https://api.github.com/orgs/ORG/teams \
+  -d '{"name": "dev-seniors", "privacy": "closed"}'
 ```
 
 ## Labels sugeridas
@@ -160,10 +160,10 @@ O arquivo `.github/CODEOWNERS` define quem é automaticamente marcado como respo
 2. Garanta que os times existam na organização (veja a seção "Times sugeridos").
 3. Ajuste as regras conforme sua estrutura de pastas.
 
-Exemplo de conteúdo:
+Exemplo de conteúdo (substitua `ORG` pelo nome da sua organização):
 
 ```plaintext
-# Code owners globais (substitua ORG pelo nome da sua organização)
+# Code owners globais
 * @ORG/dev-frontend @ORG/dev-backend @ORG/dev-seniors
 
 # Responsáveis específicos por áreas do repo
