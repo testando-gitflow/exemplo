@@ -124,3 +124,71 @@ curl -X POST -H "Authorization: Bearer TOKEN" -H "Accept: application/vnd.github
   https://api.github.com/repos/OWNER/REPO/labels \
   -d '{"name": "type-ci", "color": "A2EEEF", "description": "Mudanças de CI"}'
 ```
+
+## CODEOWNERS
+
+O arquivo `.github/CODEOWNERS` define quem é automaticamente marcado como responsável (reviewer) para mudanças em partes do repositório.
+
+- Localização: `.github/CODEOWNERS`
+- Regra global: `*` define owners padrão para todo o repo.
+- Regras por diretório: exemplos com `/frontend/**` e `/backend/**` cobrem todas as pastas e arquivos abaixo.
+- Owners aceitos: usuários (`@usuario`) ou times da organização (`@ORG/time`).
+
+### Como configurar para sua organização
+
+1. Substitua `ORG` pelo nome da sua organização GitHub.
+2. Garanta que os times existam na organização (veja a seção "Times sugeridos").
+3. Ajuste as regras conforme sua estrutura de pastas.
+
+Exemplo de conteúdo:
+
+```plaintext
+# Code owners globais (substitua ORG pelo nome da sua organização)
+* @ORG/dev-frontend @ORG/dev-backend @ORG/dev-seniors
+
+# Responsáveis específicos por áreas do repo
+/frontend/** @ORG/dev-frontend @ORG/dev-seniors
+/backend/** @ORG/dev-backend @ORG/dev-seniors
+```
+
+### Dicas
+
+- Use `/**` para cobrir recursivamente um diretório.
+- Ordem importa: a última regra que casa é a aplicada.
+- Se não usar times, substitua por usuários individuais (`@usuario`).
+- Depois de atualizar, faça um PR de teste e verifique se os owners são atribuídos automaticamente.
+
+## Automatização via Script (GitHub CLI)
+
+Para evitar executar cada comando manualmente, use o script `scripts/setup-github.sh` que aplica as proteções de branch, cria os times e as labels automaticamente.
+
+- Pré-requisitos: GitHub CLI instalado e autenticado (`gh auth login`).
+- Parâmetros: `ORG` (organização), `OWNER` (dono do repo), `REPO` (nome do repo).
+
+### Uso em macOS/Linux (bash)
+
+```sh
+chmod +x scripts/setup-github.sh
+./scripts/setup-github.sh ORG OWNER REPO
+```
+
+### Uso no Windows (PowerShell via Git Bash/WSL)
+
+Se estiver usando Git Bash ou WSL:
+
+```sh
+chmod +x scripts/setup-github.sh
+./scripts/setup-github.sh ORG OWNER REPO
+```
+
+### Exemplos
+
+```sh
+./scripts/setup-github.sh minha-org testando-gitflow exemplo
+```
+
+O script:
+
+- Aplica proteções usando os arquivos `.github/branch-protection-policies/*.json`.
+- Cria os times `dev-frontend`, `dev-backend`, `dev-seniors` na organização informada.
+- Cria as labels padrão no repositório `OWNER/REPO` informado.
