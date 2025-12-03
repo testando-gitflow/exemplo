@@ -1,8 +1,8 @@
-# Code owners globais
+# Code owners globais (substitua ORG pelo nome da sua organização)
 
-- @dev-senior @qa-team-lead
+- @testando-gitflow/dev-frontend @testando-gitflow/dev-backend @testando-gitflow/dev-seniors
 
 # Responsáveis específicos por áreas do repo
 
-/frontend/_ @frontend-team
-/backend/_ @backend-team
+/frontend/** @testando-gitflow/dev-frontend @testando-gitflow/dev-seniors
+/backend/** @testando-gitflow/dev-backend @testando-gitflow/dev-seniors
