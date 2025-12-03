@@ -11,7 +11,7 @@ test.describe("TODO App", () => {
 
   test("should display the subheader", async ({ page }) => {
     await expect(
-      page.getByRole("heading", {
+      page.getByRole("paragraph", {
         name: "Gerencie suas tarefas diárias e organize-as por categoria.",
       })
     ).toBeVisible();
