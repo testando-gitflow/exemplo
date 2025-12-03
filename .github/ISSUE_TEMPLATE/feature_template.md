@@ -1,7 +1,7 @@
 ---
 name: "Feature Request"
 description: Solicitação de funcionalidade ou melhoria
-labels: ["type:feature"]
+labels: []
 assignees: []
 ---
 

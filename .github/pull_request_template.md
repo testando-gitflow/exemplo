@@ -6,12 +6,13 @@ Resumo claro do que esta PR muda.
 
 Selecione o que se aplica:
 
-- [ ] Feature nova
-- [ ] Correção de bug
-- [ ] Refatoração
-- [ ] Documentação
-- [ ] Configuração / infra
-- [ ] Outra
+- [ ] frontend
+- [ ] backend
+- [ ] docs
+- [ ] release
+- [ ] team-dev-seniors
+- [ ] type-bug
+- [ ] type-ci
 
 ## Motivação e contexto
 
