@@ -5,6 +5,26 @@ Inclui templates e ações automatizadas para o ciclo Alpha, Beta e Release.
 
 ![Fluxo GitFlow](./docs/gitflow.png)
 
+## Permissões para Actions criarem e aprovarem Pull Requests
+
+Para que as GitHub Actions possam criar e aprovar pull requests automaticamente, é necessário conceder permissões específicas.
+
+### Como configurar as permissões
+
+#### Na organização
+
+1. Acesse as configurações da organização no GitHub.
+2. Vá em **Settings** > **Actions** > **General**.
+3. Em **Workflow permissions**, selecione **Allow GitHub Actions to create and approve pull requests**.
+
+#### No repositório
+
+1. Acesse o repositório desejado.
+2. Vá em **Settings** > **Actions** > **General**.
+3. Em **Workflow permissions**, selecione **Allow GitHub Actions to create and approve pull requests**.
+
+> **Observação:** Essas permissões são essenciais para workflows que automatizam merges, releases ou atualizações de dependências via pull requests.
+
 ## Aplicando políticas de proteção de branch
 
 ### Aplicando políticas via GitHub CLI
