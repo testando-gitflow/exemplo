@@ -55,19 +55,11 @@ gh api "orgs/${ORG}/teams" -f name='dev-seniors' -f privacy='closed' || true
 
 echo "Creating repository labels in ${REPO_SLUG}..."
 # Labels creation
-# Frontend
 gh label create "frontend" --color "1D76DB" --description "Mudanças no frontend" --repo "${REPO_SLUG}" || true
-# Backend
 gh label create "backend" --color "D73A4A" --description "Mudanças no backend" --repo "${REPO_SLUG}" || true
-# Docs
+gh label create "infra" --color "5319E7" --description "Infraestrutura" --repo "${REPO_SLUG}" || true
 gh label create "docs" --color "0075CA" --description "Documentação" --repo "${REPO_SLUG}" || true
-# Release
+gh label create "ci" --color "A2EEEF" --description "Integração contínua" --repo "${REPO_SLUG}" || true
 gh label create "release" --color "FBCA04" --description "Release" --repo "${REPO_SLUG}" || true
-# Team seniors
-gh label create "team-dev-seniors" --color "F9D0C4" --description "Time Seniors/Infraestrutura" --repo "${REPO_SLUG}" || true
-# Type bug
-gh label create "type-bug" --color "B60205" --description "Bug detectado" --repo "${REPO_SLUG}" || true
-# Type ci
-gh label create "type-ci" --color "A2EEEF" --description "Mudanças de CI" --repo "${REPO_SLUG}" || true
 
 echo "All steps completed."
