@@ -1,7 +1,7 @@
 ---
 name: "Bug Report"
 description: Reportar defeito ou comportamento inesperado
-labels: ["type:bug"]
+labels: ["type-bug"]
 assignees: []
 ---
 
@@ -29,6 +29,6 @@ Se aplicável
 
 ## Área Responsável
 
-- [ ] Frontend
-- [ ] Backend
-- [ ] Seniors
+- [ ] frontend
+- [ ] backend
+- [ ] team-dev-seniors
