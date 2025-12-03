@@ -9,6 +9,14 @@ test.describe("TODO App", () => {
     await expect(page.getByRole("heading", { name: "TODO App" })).toBeVisible();
   });
 
+  test("should display the subheader", async ({ page }) => {
+    await expect(
+      page.getByRole("heading", {
+        name: "Gerencie suas tarefas diárias e organize-as por categoria.",
+      })
+    ).toBeVisible();
+  });
+
   test("should display gitflow information", async ({ page }) => {
     await expect(
       page.getByRole("heading", { name: "Sobre o Gitflow" })
