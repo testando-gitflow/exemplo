@@ -28,5 +28,15 @@
       "id": "2",
       "name": "Pessoal"
     }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Trabalho"
+    },
+    {
+      "id": "2",
+      "name": "Pessoal"
+    }
   ]
 }
