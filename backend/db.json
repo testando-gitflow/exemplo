@@ -5,6 +5,30 @@
       "title": "Primeiro TODO",
       "completed": false,
       "createdAt": "2025-12-02T12:00:00Z"
+    },
+    {
+      "title": "Tarefa para completar",
+      "completed": true,
+      "createdAt": "2025-12-03T19:35:08.633Z",
+      "id": "sxjMPb7"
+    },
+    {
+      "title": "Nova tarefa de teste",
+      "completed": false,
+      "createdAt": "2025-12-03T19:35:08.641Z",
+      "id": "j5i8Zoi"
+    },
+    {
+      "title": "Tarefa para completar",
+      "completed": false,
+      "createdAt": "2025-12-03T19:35:52.742Z",
+      "id": "T4fsZSS"
+    },
+    {
+      "title": "Nova tarefa de teste",
+      "completed": false,
+      "createdAt": "2025-12-03T19:35:52.867Z",
+      "id": "cN2O3Ac"
     }
   ],
   "categories": [
