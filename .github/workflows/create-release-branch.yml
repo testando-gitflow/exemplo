@@ -1,18 +1,14 @@
-name: Release Please
+name: Create Release Branch
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  release-please-main:
-    if: github.event.pull_request.merged == true
+  create-release-branch:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +18,10 @@ jobs:
       - name: Fetch all tags
         run: git fetch --prune --unshallow --tags || git fetch --tags
 
-      - name: Run Release Please (final release)
+      - name: Run Release Please (manual mode)
+        id: release_please
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
+          target-branch: dev
