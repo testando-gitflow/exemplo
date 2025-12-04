@@ -29,7 +29,7 @@ jobs:
       - name: Extract new version
         id: version
         run: |
-          VERSION=$(echo "${{ steps.rp.outputs.pr }}" | grep -oP '"release-\K[0-9]+\.[0-9]+\.[0-9]+')
+          VERSION="${{ steps.rp.outputs.version }}"
           if [ -z "$VERSION" ]; then
             echo "Não consegui detectar a versão da PR gerada."
             exit 1
