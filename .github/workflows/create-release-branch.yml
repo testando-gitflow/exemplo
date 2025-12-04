@@ -26,14 +26,21 @@ jobs:
           release-type: simple
           target-branch: dev
 
+      # Recupera versão corretamente usando major/minor/patch
       - name: Extract new version
         id: version
         run: |
-          VERSION="${{ steps.rp.outputs.version }}"
-          if [ -z "$VERSION" ]; then
-            echo "Não consegui detectar a versão da PR gerada."
+          MAJOR="${{ steps.rp.outputs.major }}"
+          MINOR="${{ steps.rp.outputs.minor }}"
+          PATCH="${{ steps.rp.outputs.patch }}"
+
+          if [ -z "$MAJOR" ] || [ -z "$MINOR" ] || [ -z "$PATCH" ]; then
+            echo "Release Please não retornou major/minor/patch. Nada para versionar."
             exit 1
           fi
+
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Detected version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare release branch name
@@ -43,21 +50,28 @@ jobs:
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
           echo "Criando branch: $BRANCH"
 
+      # Cria a release/x.x.x baseada na branch automática gerada pelo Release Please
       - name: Create proper release branch
         run: |
-          RELEASE_PR_BRANCH=$(echo "${{ steps.rp.outputs.pr-branch }}" | tr -d '"')
-          git checkout "$RELEASE_PR_BRANCH"
+          AUTO_BRANCH="${{ steps.rp.outputs.pr-branch }}"
+          if [ -z "$AUTO_BRANCH" ]; then
+            echo "Release Please não criou nenhuma PR/branch automática. Nada para promover."
+            exit 1
+          fi
+
+          git checkout "$AUTO_BRANCH"
           git pull
           git checkout -b "${{ steps.branch.outputs.branch }}"
           git push origin "${{ steps.branch.outputs.branch }}"
 
+      # Cria PR limpa direcionada para main
       - name: Create clean PR (release/x.x.x -> main)
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const version = process.env.VERSION || "${{ steps.version.outputs.version }}";
-            const branch = "release/" + version;
+            const version = "${{ steps.version.outputs.version }}";
+            const branch = `release/${version}`;
 
             await github.rest.pulls.create({
               owner: context.repo.owner,
