@@ -1,10 +1,32 @@
 {
   "todos": [
     {
-      "id": "1",
-      "title": "Primeiro TODO",
+      "title": "Nova tarefa de teste",
       "completed": false,
-      "createdAt": "2025-12-02T12:00:00Z"
+      "createdAt": "2025-12-03T19:53:18.942Z",
+      "id": 1
+    },
+    {
+      "title": "Tarefa para completar",
+      "completed": true,
+      "createdAt": "2025-12-03T19:53:19.387Z",
+      "id": 2
+    },
+    {
+      "title": "Item para contagem",
+      "completed": false,
+      "createdAt": "2025-12-03T19:53:21.302Z",
+      "id": 3
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Trabalho"
+    },
+    {
+      "id": "2",
+      "name": "Pessoal"
     }
   ],
   "categories": [

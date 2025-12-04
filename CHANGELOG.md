@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/testando-gitflow/exemplo/compare/v1.1.0...v1.2.0) (2025-12-03)
+
+
+### Features
+
+* add subheader and improve layout in Index component ([#8](https://github.com/testando-gitflow/exemplo/issues/8)) ([bbfa56d](https://github.com/testando-gitflow/exemplo/commit/bbfa56d41053dbf11e895aa6685c7e507f873850))
+
 ## 1.0.0 (2025-12-03)
 
 
