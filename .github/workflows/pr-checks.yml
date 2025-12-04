@@ -61,7 +61,7 @@ jobs:
             if (base !== 'main') {
               return
             }
-            const ok = head.startsWith('release/') || head.startsWith('hotfix/');
+            const ok = head.startsWith('release-please--branches--dev') || head.startsWith('hotfix/');
             if (!ok) {
               core.setFailed(`PR targets 'main' but source branch is '${head}'. Only 'release/*' or 'hotfix/*' PRs are allowed to merge into 'main'.`);
             }
