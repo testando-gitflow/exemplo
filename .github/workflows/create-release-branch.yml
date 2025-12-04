@@ -26,22 +26,35 @@ jobs:
           release-type: simple
           target-branch: dev
 
-      # Recupera versão corretamente usando major/minor/patch
+      # Extrai versão com fallback para tag_name ou version, removendo prefixo 'v'
       - name: Extract new version
         id: version
         run: |
+          RP_VERSION="${{ steps.rp.outputs.version }}"
+          TAG_NAME="${{ steps.rp.outputs.tag_name }}"
           MAJOR="${{ steps.rp.outputs.major }}"
           MINOR="${{ steps.rp.outputs.minor }}"
           PATCH="${{ steps.rp.outputs.patch }}"
 
-          if [ -z "$MAJOR" ] || [ -z "$MINOR" ] || [ -z "$PATCH" ]; then
-            echo "Release Please não retornou major/minor/patch. Nada para versionar."
+          VERSION=""
+          if [ -n "$MAJOR" ] && [ -n "$MINOR" ] && [ -n "$PATCH" ]; then
+            VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          elif [ -n "$RP_VERSION" ]; then
+            VERSION="$RP_VERSION"
+          elif [ -n "$TAG_NAME" ]; then
+            VERSION="$TAG_NAME"
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "Não foi possível determinar a versão a partir do Release Please."
             exit 1
           fi
 
-          VERSION="${MAJOR}.${MINOR}.${PATCH}"
-          echo "Detected version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          # Remove prefixo 'v' se existir (ex.: v1.2.3 -> 1.2.3)
+          STRIPPED_VERSION="${VERSION#v}"
+
+          echo "Detected version: $STRIPPED_VERSION"
+          echo "version=$STRIPPED_VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare release branch name
         id: branch
@@ -55,7 +68,8 @@ jobs:
         run: |
           AUTO_BRANCH="${{ steps.rp.outputs.pr-branch }}"
           if [ -z "$AUTO_BRANCH" ]; then
-            echo "Release Please não criou nenhuma PR/branch automática. Nada para promover."
+            echo "Release Please não criou nenhuma PR/branch automática (pr-branch vazio)."
+            echo "Verifique se houve mudanças que gerem release ou se o Release Please está configurado para criar PR."
             exit 1
           fi
 
