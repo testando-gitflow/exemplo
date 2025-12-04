@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/testando-gitflow/exemplo/compare/v1.2.0...v1.3.0) (2025-12-04)
+
+
+### Features
+
+* update release workflow to trigger only on main branch and add manual release branch creation ([#12](https://github.com/testando-gitflow/exemplo/issues/12)) ([3570b95](https://github.com/testando-gitflow/exemplo/commit/3570b9520ba17b25f0e8cdbf7cf688e141f5f6cf))
+
 ## [1.2.0](https://github.com/testando-gitflow/exemplo/compare/v1.1.0...v1.2.0) (2025-12-03)
 
 
