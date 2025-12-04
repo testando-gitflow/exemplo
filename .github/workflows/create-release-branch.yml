@@ -24,7 +24,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: simple
-          target-branch: main
+          target-branch: dev
 
       - name: Extract new version
         id: version
